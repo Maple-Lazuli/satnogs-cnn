@@ -1,7 +1,7 @@
 import argparse
 
 from models.get_model import get_model
-from src.load_data import Loader
+from data_utils.load_data import Loader
 from src.train_model import Trainer
 from src.evaluate_model import Evaluator
 
@@ -27,7 +27,7 @@ if __name__ == "__main__":
         parser = argparse.ArgumentParser()
 
         parser.add_argument('--epochs', type=int,
-                            default=1,
+                            default=10,
                             help='The number of epochs for training')
 
         parser.add_argument('--learning-rate', type=float,
@@ -35,11 +35,11 @@ if __name__ == "__main__":
                             help='The learning rate to use during training')
 
         parser.add_argument('--class-type', type=str,
-                            default="example",
+                            default="babycnn",
                             help='The class of network to use')
 
         parser.add_argument('--name', type=str,
-                            default="example",
+                            default="babycnn",
                             help='The name to save results as')
 
         parser.add_argument('--save-dir', type=str,
@@ -51,7 +51,7 @@ if __name__ == "__main__":
                             help='The location of the data on the disk')
 
         parser.add_argument('--batch-size', type=int,
-                            default=400,
+                            default=1,
                             help='The batch size to use for feeding examples')
 
         parsed_flags, _ = parser.parse_known_args()

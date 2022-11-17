@@ -24,4 +24,4 @@ class Loader:
         self.val_loader = torch.utils.data.DataLoader(self.val_set, batch_size=batch_size,
                                                        shuffle=False, num_workers=2)
 
-        self.classes = (0, 1)
+        self.classes = ("no-signal", "signal")

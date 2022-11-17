@@ -5,8 +5,8 @@ import os
 import numpy as np
 import torch
 
-from src.load_data import Loader
-from models.example import Model
+from data_utils.load_data import Loader
+from models.babycnn import Model
 
 
 def save_training_performance(model, train_loss, val_loss, all_step_loss):

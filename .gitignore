@@ -3,3 +3,5 @@ venv/*
 data/*
 src/__pycache__/*
 notebooks/*
+models/__pycache__/*
+data_utils/__pycache__/*

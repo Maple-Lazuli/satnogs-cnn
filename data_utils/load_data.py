@@ -14,9 +14,14 @@ class Loader:
         self.train_loader = torch.utils.data.DataLoader(self.train_set, batch_size=batch_size,
                                                         shuffle=True, num_workers=2)
 
-        self.train_set = SatnogsDataset(csv="./data/test.csv")
+        self.test_set = SatnogsDataset(csv="./data/test.csv")
 
         self.test_loader = torch.utils.data.DataLoader(self.test_set, batch_size=batch_size,
+                                                       shuffle=False, num_workers=2)
+
+        self.val_set = SatnogsDataset(csv="./data/val.csv")
+
+        self.val_loader = torch.utils.data.DataLoader(self.val_set, batch_size=batch_size,
                                                        shuffle=False, num_workers=2)
 
         self.classes = (0, 1)

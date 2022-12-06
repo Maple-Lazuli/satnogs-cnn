@@ -15,6 +15,18 @@ def fix_status(status):
         return -1
 
 
+def filter_observation(download_str):
+    try:
+        dl_dict = json.loads(download_str)
+        if dl_dict['waterfall_shape'] == [1542, 623]:
+            return 1
+        else:
+            return -1
+
+    except:
+        return -1
+
+
 def fix_waterfall_path(download_str):
     dl_dict = json.loads(download_str.replace("'", '"'))
     waterfall_path = dl_dict['waterfall_hash_name']
@@ -27,6 +39,8 @@ def main(flags):
         exit()
 
     df = pd.read_csv(flags.csv)
+
+    df = df[df['Downloads'].apply(lambda x: filter_observation(x))]
 
     df['status'] = df['Status'].apply(lambda x: fix_status(x))
     df['waterfall_location'] = df['Downloads'].apply(lambda x: fix_waterfall_path(x))

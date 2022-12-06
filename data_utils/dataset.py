@@ -1,9 +1,7 @@
 from torch.utils.data import Dataset
 import pandas as pd
-from PIL import Image
 import numpy as np
 import torch
-from torchvision.transforms.functional import pil_to_tensor
 
 
 class SatnogsDataset(Dataset):
@@ -17,5 +15,15 @@ class SatnogsDataset(Dataset):
     def __getitem__(self, index):
         example = self.annotations.iloc[index]
         img = np.fromfile(example['waterfall_location'], dtype=np.uint8).reshape(-1, 623)
-        img = Image.fromarray(img).resize((1542, 1542), Image.ANTIALIAS)
-        return pil_to_tensor(img).type(torch.float), example['status']
+        # add image transformations and augmentations here
+        # normalize the image here
+        img = torch.from_numpy(img)
+        img = img.unsqueeze(0).repeat(1,1,1)
+        img = img.to(torch.float32)
+        return img, torch.tensor(example['status']).unsqueeze(0).type(torch.float32)
+
+
+if __name__ == '__main__':
+    train_data = SatnogsDataset("/home/maple/CodeProjects/satnogs_cnn/data/train.csv")
+
+    print(train_data[0])

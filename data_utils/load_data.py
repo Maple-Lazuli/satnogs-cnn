@@ -4,7 +4,7 @@ from data_utils.dataset import SatnogsDataset
 
 
 class Loader:
-    def __init__(self, location="../data", batch_size=1):
+    def __init__(self, location="./data", batch_size=1):
         transform = transforms.Compose(
             [transforms.ToTensor(),
              transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])

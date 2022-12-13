@@ -12,7 +12,7 @@ from ml_infrastructure.manager import Manager
 def main(flags):
     os.environ["CUDA_VISIBLE_DEVICES"] = flags.gpus
 
-    dm = SatnogsDataManager(batch_size=100).dm
+    dm = SatnogsDataManager(batch_size=50).dm
 
     model1 = Model(net=ResNet(1, ResBlock, [2, 2, 2, 2], useBottleneck=False, outputs=1), name='resnet-18')
     model1.criterion = torch.nn.BCEWithLogitsLoss()

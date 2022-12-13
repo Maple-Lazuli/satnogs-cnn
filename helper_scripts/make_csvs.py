@@ -48,7 +48,7 @@ def main(flags):
     df = df[['status', 'waterfall_location']]
     df = df.sample(frac=1)
 
-    train_limit = int(400 * .8)
+    train_limit = int(df.shape[0] * .8)
     left_over = int((df.shape[0] - train_limit) / 2)
     train_df = df[:train_limit]
     val_df = df[train_limit:train_limit + left_over]

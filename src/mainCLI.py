@@ -2,10 +2,9 @@ import argparse
 import os
 import torch
 
-from data_utils.dataset import SatnogsDataset
-from models.resnet import ResNet, ResBlock
+from data_utils.satnogs_data_manager import SatnogsDataManager
+from models.resnet import ResNet, ResBlock, ResBottleneckBlock
 
-from ml_infrastructure.data_manager import DataManager
 from ml_infrastructure.model import Model
 from ml_infrastructure.manager import Manager
 
@@ -13,26 +12,31 @@ from ml_infrastructure.manager import Manager
 def main(flags):
     os.environ["CUDA_AVAILABLE_DEVICES"] = flags.gpus
 
-    batch_size = 50
-    train_set = SatnogsDataset(csv="./data/train.csv")
-    train_loader = torch.utils.data.DataLoader(train_set, batch_size=batch_size,
-                                               shuffle=True, num_workers=2)
-    test_set = SatnogsDataset(csv="./data/test.csv")
-    test_loader = torch.utils.data.DataLoader(test_set, batch_size=batch_size,
-                                              shuffle=False, num_workers=2)
-    val_set = SatnogsDataset(csv="./data/val.csv")
-    val_loader = torch.utils.data.DataLoader(val_set, batch_size=batch_size,
-                                             shuffle=False, num_workers=2)
-    classes = ("no-signal", "signal")
-    dm = DataManager(train_loader=train_loader, validation_loader=val_loader, test_loader=test_loader, classes=classes)
+    dm = SatnogsDataManager(batch_size=5).dm
 
-    model = Model(net=ResNet(1, ResBlock, [2, 2, 2, 2], useBottleneck=False, outputs=1), name='resnet')
-    model.criterion = torch.nn.BCEWithLogitsLoss()
-    manager = Manager(models=[model], data_manager=dm, epochs=100)
+    model1 = Model(net=ResNet(1, ResBlock, [2, 2, 2, 2], useBottleneck=False, outputs=1), name='resnet-18')
+    model1.criterion = torch.nn.BCEWithLogitsLoss()
+
+    model2 = Model(net=ResNet(1, ResBlock, [2, 2, 2, 2], useBottleneck=False, outputs=1), name='resnet-19')
+    model2.criterion = torch.nn.BCEWithLogitsLoss()
+
+    manager = Manager(models=[model1, model2], data_manager=dm, epochs=1, start_watcher_app=flags.start_watcher,
+
+    # model2 = Model(net=ResNet(1, ResBlock, [3, 4, 6, 3], useBottleneck=False, outputs=1), name='resnet-34')
+    # model2.criterion = torch.nn.BCEWithLogitsLoss()
+    #
+    # model3 = Model(net=ResNet(1, ResBottleneckBlock, [3, 4, 6, 3], useBottleneck=True, outputs=1), name='resnet-50')
+    # model3.criterion = torch.nn.BCEWithLogitsLoss()
+    #
+    #
+    #
+    # manager = Manager(models=[model1, model2, model3], data_manager=dm, epochs=1, start_watcher_app=flags.start_watcher,
+                      ip=flags.watcher_ip, port=flags.watcher_port)
     manager.perform()
     manager.save_watcher_results(save_location='./results', save_name='Resnet.json')
 
-    manager.shutdown_watcher()
+    if flags.stop_watcher_on_end:
+        manager.shutdown_watcher()
 
 
 if __name__ == "__main__":
@@ -41,6 +45,22 @@ if __name__ == "__main__":
     parser.add_argument('--gpus', type=str,
                         default='',
                         help='Convert the psd to grey scale.')
+
+    parser.add_argument('--start-watcher', type=bool,
+                        default=True,
+                        help='Boolean to start a watcher')
+
+    parser.add_argument('--stop-watcher-on-end', type=bool,
+                        default=False,
+                        help='Boolean to stop the watcher after training')
+
+    parser.add_argument('--watcher-ip', type=str,
+                        default='0.0.0.0',
+                        help='The IP to use for the watcher')
+
+    parser.add_argument('--watcher-port', type=int,
+                        default=5123,
+                        help='The port to use for the watcher')
 
     parsed_flags, _ = parser.parse_known_args()
 

@@ -10,7 +10,7 @@ from ml_infrastructure.manager import Manager
 
 
 def main(flags):
-    os.environ["CUDA_AVAILABLE_DEVICES"] = flags.gpus
+    os.environ["CUDA_VISIBLE_DEVICES"] = flags.gpus
 
     dm = SatnogsDataManager(batch_size=100).dm
 

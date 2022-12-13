@@ -12,25 +12,18 @@ from ml_infrastructure.manager import Manager
 def main(flags):
     os.environ["CUDA_AVAILABLE_DEVICES"] = flags.gpus
 
-    dm = SatnogsDataManager(batch_size=5).dm
+    dm = SatnogsDataManager(batch_size=100).dm
 
     model1 = Model(net=ResNet(1, ResBlock, [2, 2, 2, 2], useBottleneck=False, outputs=1), name='resnet-18')
     model1.criterion = torch.nn.BCEWithLogitsLoss()
 
-    model2 = Model(net=ResNet(1, ResBlock, [2, 2, 2, 2], useBottleneck=False, outputs=1), name='resnet-19')
+    model2 = Model(net=ResNet(1, ResBlock, [3, 4, 6, 3], useBottleneck=False, outputs=1), name='resnet-34')
     model2.criterion = torch.nn.BCEWithLogitsLoss()
 
-    manager = Manager(models=[model1, model2], data_manager=dm, epochs=1, start_watcher_app=flags.start_watcher,
+    model3 = Model(net=ResNet(1, ResBottleneckBlock, [3, 4, 6, 3], useBottleneck=True, outputs=1), name='resnet-50')
+    model3.criterion = torch.nn.BCEWithLogitsLoss()
 
-    # model2 = Model(net=ResNet(1, ResBlock, [3, 4, 6, 3], useBottleneck=False, outputs=1), name='resnet-34')
-    # model2.criterion = torch.nn.BCEWithLogitsLoss()
-    #
-    # model3 = Model(net=ResNet(1, ResBottleneckBlock, [3, 4, 6, 3], useBottleneck=True, outputs=1), name='resnet-50')
-    # model3.criterion = torch.nn.BCEWithLogitsLoss()
-    #
-    #
-    #
-    # manager = Manager(models=[model1, model2, model3], data_manager=dm, epochs=1, start_watcher_app=flags.start_watcher,
+    manager = Manager(models=[model1, model2, model3], data_manager=dm, epochs=1, start_watcher_app=flags.start_watcher,
                       ip=flags.watcher_ip, port=flags.watcher_port)
     manager.perform()
     manager.save_watcher_results(save_location='./results', save_name='Resnet.json')

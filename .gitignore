@@ -1,6 +1,6 @@
 .idea/*
 venv/*
-data/*
+satnogs-data/*
 src/__pycache__/*
 notebooks/*
 models/__pycache__/*

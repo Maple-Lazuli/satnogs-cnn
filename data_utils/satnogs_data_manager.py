@@ -1,3 +1,4 @@
+import json
 from dataclasses import dataclass
 
 import torch
@@ -11,13 +12,17 @@ class SatnogsDataManager:
     batch_size: int = 5
 
     def __post_init__(self):
-        train_set = SatnogsDataset(csv="./data/train.csv")
+
+        with open('./satnogs-data/stats.json', 'r') as file_in:
+            stats = json.load(file_in)
+
+        train_set = SatnogsDataset(csv="./satnogs-data/train.csv", mu=stats['mu'], sigma=stats['sigma'])
         self.train_loader = torch.utils.data.DataLoader(train_set, batch_size=self.batch_size,
                                                         shuffle=True, num_workers=2)
-        test_set = SatnogsDataset(csv="./data/test.csv")
+        test_set = SatnogsDataset(csv="./satnogs-data/test.csv", mu=stats['mu'], sigma=stats['sigma'])
         self.test_loader = torch.utils.data.DataLoader(test_set, batch_size=self.batch_size,
                                                        shuffle=False, num_workers=2)
-        val_set = SatnogsDataset(csv="./data/val.csv")
+        val_set = SatnogsDataset(csv="./satnogs-data/val.csv", mu=stats['mu'], sigma=stats['sigma'])
         self.val_loader = torch.utils.data.DataLoader(val_set, batch_size=self.batch_size,
                                                       shuffle=False, num_workers=2)
         self.classes = ("no-signal", "signal")

@@ -12,7 +12,7 @@ from ml_infrastructure.manager import Manager
 def main(flags):
     os.environ["CUDA_VISIBLE_DEVICES"] = flags.gpus
 
-    dm = SatnogsDataManager(batch_size=50).dm
+    dm = SatnogsDataManager(batch_size=flags.batch_size).dm
 
     model1 = Model(net=ResNet(1, ResBlock, [2, 2, 2, 2], useBottleneck=False, outputs=1), name='resnet-18')
     model1.criterion = torch.nn.BCEWithLogitsLoss()
@@ -62,6 +62,10 @@ if __name__ == "__main__":
     parser.add_argument('--stats', type=str,
                         default='./satnogs-data/stats.json',
                         help='The location of the stats.json file.')
+
+    parser.add_argument('--batch-size', type=int,
+                        default=50,
+                        help='The port to use for the watcher')
 
     parsed_flags, _ = parser.parse_known_args()
 

@@ -55,6 +55,14 @@ if __name__ == "__main__":
                         default=5123,
                         help='The port to use for the watcher')
 
+    parser.add_argument('--training-noise', type=bool,
+                        default=True,
+                        help='Boolean to indicate whether to add noise during training')
+
+    parser.add_argument('--stats', type=str,
+                        default='./satnogs-data/stats.json',
+                        help='The location of the stats.json file.')
+
     parsed_flags, _ = parser.parse_known_args()
 
     main(parsed_flags)

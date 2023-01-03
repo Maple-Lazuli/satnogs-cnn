@@ -10,13 +10,16 @@ from data_utils.dataset import SatnogsDataset
 @dataclass
 class SatnogsDataManager:
     batch_size: int = 5
+    training_noise: bool = True
+    stats: str = './satnogs-data/stats.json'
 
     def __post_init__(self):
 
-        with open('./satnogs-data/stats.json', 'r') as file_in:
+        with open(self.stats, 'r') as file_in:
             stats = json.load(file_in)
 
-        train_set = SatnogsDataset(csv="./satnogs-data/train.csv", mu=stats['mu'], sigma=stats['sigma'])
+        train_set = SatnogsDataset(csv="./satnogs-data/train.csv", mu=stats['mu'], sigma=stats['sigma'],
+                                   noise=self.training_noise)
         self.train_loader = torch.utils.data.DataLoader(train_set, batch_size=self.batch_size,
                                                         shuffle=True, num_workers=2)
         test_set = SatnogsDataset(csv="./satnogs-data/test.csv", mu=stats['mu'], sigma=stats['sigma'])

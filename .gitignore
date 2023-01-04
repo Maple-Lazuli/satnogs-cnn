@@ -6,3 +6,4 @@ notebooks/*
 models/__pycache__/*
 data_utils/__pycache__/*
 results/*
+temp/*

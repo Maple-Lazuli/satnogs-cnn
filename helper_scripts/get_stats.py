@@ -7,19 +7,28 @@ import argparse
 
 
 def load_waterfall(x):
-    return np.fromfile(x, dtype=np.uint8).reshape(-1, 623)
+    tempfile = os.path.join("./temp", x.split("/")[-1])
+
+    if os.path.exists(tempfile):
+        with open(tempfile, 'r') as file_in:
+            return int(file_in.readlines()[0])
+    else:
+        summation = np.sum(np.fromfile(x, dtype=np.uint8), dtype=int)
+        with open(tempfile, 'w') as file_out:
+            file_out.write(str(summation))
+        return summation
 
 
 def main(flags):
+    if not os.path.exists('./temp'):
+        os.mkdir("./temp")
+
     if not os.path.isfile(flags.csv):
         print(f'could not find {flags.csv}')
         exit()
 
     train = dd.read_csv(flags.csv)
-    train['loaded_waterfall'] = train['waterfall_location'].apply(lambda x: load_waterfall(x),
-                                                                  meta=('loaded_waterfall', np.uint8))
-    train['waterfall_sum'] = train['loaded_waterfall'].apply(lambda x: np.sum(x, dtype=int),
-                                                             meta=('waterfall_sum', int))
+    train['waterfall_sum'] = train['waterfall_location'].apply(lambda x: load_waterfall(x), meta=('waterfall_sum', int))
     with ProgressBar():
         train = train.compute()
 

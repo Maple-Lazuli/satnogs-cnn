@@ -10,13 +10,16 @@ def load_waterfall(x):
     tempfile = os.path.join("./temp", x.split("/")[-1])
 
     if os.path.exists(tempfile):
-        with open(tempfile, 'r') as file_in:
-            return int(file_in.readlines()[0])
-    else:
-        summation = np.sum(np.fromfile(x, dtype=np.uint8), dtype=int)
-        with open(tempfile, 'w') as file_out:
-            file_out.write(str(summation))
-        return summation
+        try:
+            with open(tempfile, 'r') as file_in:
+                return int(file_in.readlines()[0])
+        except:
+            print("Could not read saved file...")
+
+    summation = np.sum(np.fromfile(x, dtype=np.uint8), dtype=int)
+    with open(tempfile, 'w') as file_out:
+        file_out.write(str(summation))
+    return summation
 
 
 def main(flags):

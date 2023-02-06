@@ -24,8 +24,8 @@ def get_target(x):
 
 
 if __name__ == "__main__":
-    good = sw.Scraper(save_name="good", good=True, bad=False, waterfall=1, artifacts=1, list_page_limit=5)
-    bad = sw.Scraper(save_name="bad", good=False, bad=True, waterfall=1, artifacts=2, list_page_limit=5)
+    good = sw.Scraper(save_name="good", good=True, bad=False, waterfall=1, artifacts=1, list_page_limit=5, norad='44352')
+    bad = sw.Scraper(save_name="bad", good=False, bad=True, waterfall=1, artifacts=2, list_page_limit=5, norad='44352')
     good_df = good.scrape()
     bad_df = bad.scrape()
     combined_df = pd.concat([good_df, bad_df])
@@ -45,6 +45,7 @@ if __name__ == "__main__":
     test = left[:left_len]
 
     train.to_csv("./satnogs-data/train.csv", index=False)
+    train[train['status'] == 0].iloc[0:2].to_csv("./satnogs-data/train_1_example.csv", index=False)
     val.to_csv("./satnogs-data/val.csv", index=False)
     test.to_csv("./satnogs-data/test.csv", index=False)
 

@@ -69,7 +69,7 @@ if __name__ == "__main__":
                         help='The location of the stats.json file.')
 
     parser.add_argument('--train-csv', type=str,
-                        default='./satnogs-data/training.csv',
+                        default='./satnogs-data/train.csv',
                         help='The location of the training csv.')
 
     parser.add_argument('--val-csv', type=str,

@@ -32,6 +32,8 @@ def main(flags):
     page_limit = flags.page_limit
     save_dir = flags.save_dir
 
+    print(f'Estimated {page_limit * 2 * 20} observations to download.')
+
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
 
@@ -42,6 +44,8 @@ def main(flags):
                      norad=norad)
     good_df = good.scrape()
     bad_df = bad.scrape()
+    print(f"Downloaded {good_df.shape[0]} observations with positive signals.")
+    print(f"Downloaded {bad_df.shape[0]} observations with negative signals.")
 
     # Combine the dataframes, shuffle, then rename columns.
     combined_df = pd.concat([good_df, bad_df])

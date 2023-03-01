@@ -42,8 +42,8 @@ def main(flags):
                       norad=norad)
     bad = sw.Scraper(save_name="bad", good=False, bad=True, waterfall=1, artifacts=2, list_page_limit=page_limit,
                      norad=norad)
-    good_df = good.scrape()
-    bad_df = bad.scrape()
+    good_df = good.scrape(resume=True)
+    bad_df = bad.scrape(resume=True)
     print(f"Downloaded {good_df.shape[0]} observations with positive signals.")
     print(f"Downloaded {bad_df.shape[0]} observations with negative signals.")
 

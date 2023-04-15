@@ -26,6 +26,7 @@ def main(flags):
 
     manager = Manager(models=[model1, model2, model3], data_manager=dm, epochs=1, start_watcher_app=flags.start_watcher,
                       ip=flags.watcher_ip, port=flags.watcher_port)
+
     manager.perform()
     manager.save_watcher_results(save_location='./results', save_name='Resnet.json')
 

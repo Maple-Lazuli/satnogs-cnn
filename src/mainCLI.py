@@ -25,11 +25,15 @@ def main(flags):
     model3.criterion = torch.nn.BCEWithLogitsLoss()
 
     manager = Manager(models=[model1, model2, model3], data_manager=dm, epochs=1, start_watcher_app=flags.start_watcher,
-                      ip=flags.watcher_ip, port=flags.watcher_port)
+                      ip=flags.watcher_ip, port=flags.watcher_port, window_size=flags.window_size)
 
     manager.perform()
-    manager.save_watcher_results(save_location='./results', save_name='Resnet.json')
-
+    manager.save_watcher_results(save_location='./results', save_name='Resnets.json')
+    print("Finished training and archived performance json.")
+    try:
+        torch.cuda.empty_cache()
+    except:
+        print("could not free the gpu")
     if flags.stop_watcher_on_end:
         manager.shutdown_watcher()
 
@@ -63,7 +67,11 @@ if __name__ == "__main__":
 
     parser.add_argument('--batch-size', type=int,
                         default=1,
-                        help='The port to use for the watcher')
+                        help='The batch size to use when feeding data')
+
+    parser.add_argument('--window-size', type=int,
+                        default=20,
+                        help='The window size to use for determining when to stop training.')
 
     parser.add_argument('--stats', type=str,
                         default='./satnogs-data/stats.json',

@@ -25,7 +25,8 @@ def main(flags):
     model3.criterion = torch.nn.BCEWithLogitsLoss()
 
     manager = Manager(models=[model1, model2, model3], data_manager=dm, epochs=1, start_watcher_app=flags.start_watcher,
-                      ip=flags.watcher_ip, port=flags.watcher_port, window_size=flags.window_size)
+                      ip=flags.watcher_ip, port=flags.watcher_port, window_size=flags.window_size,
+                      eval_rate=flags.eval_rate)
 
     manager.perform()
     manager.save_watcher_results(save_location='./results', save_name='Resnets.json')
@@ -68,6 +69,10 @@ if __name__ == "__main__":
     parser.add_argument('--batch-size', type=int,
                         default=1,
                         help='The batch size to use when feeding data')
+
+    parser.add_argument('--eval-rate', type=int,
+                        default=3,
+                        help='How often the model should be evaluated')
 
     parser.add_argument('--window-size', type=int,
                         default=20,

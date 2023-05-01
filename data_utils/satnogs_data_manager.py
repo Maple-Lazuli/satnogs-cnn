@@ -24,12 +24,15 @@ class SatnogsDataManager:
                                    noise=self.training_noise)
         self.train_loader = torch.utils.data.DataLoader(train_set, batch_size=self.batch_size,
                                                         shuffle=True, num_workers=2)
+
         test_set = SatnogsDataset(csv=self.test, mu=stats['mu'], sigma=stats['sigma'])
         self.test_loader = torch.utils.data.DataLoader(test_set, batch_size=self.batch_size,
                                                        shuffle=False, num_workers=2)
+
         val_set = SatnogsDataset(csv=self.val, mu=stats['mu'], sigma=stats['sigma'])
         self.val_loader = torch.utils.data.DataLoader(val_set, batch_size=self.batch_size,
                                                       shuffle=False, num_workers=2)
+
         self.classes = ("no-signal", "signal")
 
         self.dm = DataManager(train_loader=self.train_loader, validation_loader=self.val_loader,

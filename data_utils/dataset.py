@@ -30,6 +30,7 @@ class SatnogsDataset(Dataset):
         img = (np.fromfile(example['waterfall_location'], dtype=np.uint8).reshape(-1, 623) - self.mu) / self.sigma
         if self.noise:
             img = add_noise(img)
+        img = (img - np.min(img)) / (np.max(img) - np.min(img))
         img = torch.from_numpy(img)
         img = img.unsqueeze(0).repeat(1, 1, 1)
         img = img.to(torch.float32)

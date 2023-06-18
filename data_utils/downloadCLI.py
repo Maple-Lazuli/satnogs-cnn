@@ -95,7 +95,7 @@ if __name__ == "__main__":
                         help='The NORAD of the satellite to pull data for.')
 
     parser.add_argument('--page-limit', type=int,
-                        default=5,
+                        default=100,
                         help='The number of pages to pull down.')
 
     parser.add_argument('--save-dir', type=str,
